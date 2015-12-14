@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Setup</title>
+<title>Properties of the Exponential Distribution</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -206,6 +206,8 @@ hr {
 <body>
 <hr/>
 
+<h1>Properties of the Exponential Distribution</h1>
+
 <p>This project compares the exponential distribution to the Central Limit Theorum.</p>
 
 <p>We use <code>rexp(n, lambda)</code> to simulate the distribution, where <code>lambda =
@@ -237,13 +239,13 @@ str(samples)
 <pre><code>##  num [1:1000, 1:40] 9.11 1.86 4.06 1.61 8.77 ...
 </code></pre>
 
-<h3>Comparing the Sample Mean to the Theoretical Mean</h3>
+<h2>Comparing the Sample Mean to the Theoretical Mean</h2>
 
 <ol>
 <li>Show the sample mean and compare it to the theoretical mean of the distribution.</li>
 </ol>
 
-<h4>Sample Mean:</h4>
+<h3>Sample Mean:</h3>
 
 <p>Here we generate the mean for each of the 1000 rows in the data frame
 and then the mean of all the means.</p>
@@ -255,7 +257,7 @@ mean(sampleMeans)
 <pre><code>## [1] 5.00499
 </code></pre>
 
-<h4>Theoretical Mean:</h4>
+<h3>Theoretical Mean:</h3>
 
 <p>The theoretical mean is given by:</p>
 
@@ -270,13 +272,13 @@ mean(sampleMeans)
 <p>Here we see that the sample mean roughly coincides with the
 theoretical mean, just as the Central Limit Theorum predicts.</p>
 
-<h3>Comparing the Sample Variance to the Theoretical Variance</h3>
+<h2>Comparing the Sample Variance to the Theoretical Variance</h2>
 
 <ol>
 <li>Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.</li>
 </ol>
 
-<h4>Theoretical Variance</h4>
+<h3>Theoretical Variance</h3>
 
 <p>The theoretical variance of the distribution is \((1 / \lambda)^2\):</p>
 
@@ -286,7 +288,7 @@ theoretical mean, just as the Central Limit Theorum predicts.</p>
 <pre><code>## [1] 25
 </code></pre>
 
-<h4>Sample Variance</h4>
+<h3>Sample Variance</h3>
 
 <p>Similar to calculating the sample means above, here we calculated the
 variance for all 1000 samples of the exponential distribution.</p>

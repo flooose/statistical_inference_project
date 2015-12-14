@@ -7,6 +7,8 @@ output:
 ---
 ---
 
+# Properties of the Exponential Distribution
+
 This project compares the exponential distribution to the Central Limit Theorum.
 
 We use `rexp(n, lambda)` to simulate the distribution, where `lambda =
@@ -40,11 +42,11 @@ str(samples)
 ##  num [1:1000, 1:40] 9.11 1.86 4.06 1.61 8.77 ...
 ```
 
-### Comparing the Sample Mean to the Theoretical Mean
+## Comparing the Sample Mean to the Theoretical Mean
 
 1. Show the sample mean and compare it to the theoretical mean of the distribution.
 
-#### Sample Mean:
+### Sample Mean:
 
 Here we generate the mean for each of the 1000 rows in the data frame
 and then the mean of all the means.
@@ -60,7 +62,7 @@ mean(sampleMeans)
 ## [1] 5.00499
 ```
 
-#### Theoretical Mean:
+### Theoretical Mean:
 
 The theoretical mean is given by:
 
@@ -78,11 +80,11 @@ The theoretical mean is given by:
 Here we see that the sample mean roughly coincides with the
 theoretical mean, just as the Central Limit Theorum predicts.
 
-### Comparing the Sample Variance to the Theoretical Variance
+## Comparing the Sample Variance to the Theoretical Variance
 
 2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
 
-#### Theoretical Variance
+### Theoretical Variance
 
 The theoretical variance of the distribution is \((1 / \lambda)^2\):
 
@@ -95,7 +97,7 @@ The theoretical variance of the distribution is \((1 / \lambda)^2\):
 ## [1] 25
 ```
 
-#### Sample Variance
+### Sample Variance
 
 Similar to calculating the sample means above, here we calculated the
 variance for all 1000 samples of the exponential distribution.
