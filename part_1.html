@@ -224,52 +224,88 @@ simulations of 40 samples.</p>
 
 <h2>Setup</h2>
 
-<pre><code class="r">library(ggplot2)
+<p>We begin by setting some variables and creating a data frame of 1000
+simulations with 40 samples from the exponential distribution.</p>
+
+<pre><code class="r">lambda = 0.2
+samples &lt;- NULL
+
+for (i in 1 : 1000) samples = rbind(samples, rexp(40, rate = lambda))
+str(samples)
 </code></pre>
 
-<p>\(Var(X_i) = 2.92\)
-We begin by taking 1000 means of 40 samples of the exponential distribution</p>
-
-<pre><code class="r">sampleMeans = NULL
-lambda = 0.2
-theoreticalMean = 1/lambda
-for (i in 1 : 1000) sampleMeans = c(sampleMeans, mean(rexp(40, rate = 0.2)))
+<pre><code>##  num [1:1000, 1:40] 9.11 1.86 4.06 1.61 8.77 ...
 </code></pre>
+
+<h3>Comparing the Sample Mean to the Theoretical Mean</h3>
 
 <ol>
 <li>Show the sample mean and compare it to the theoretical mean of the distribution.</li>
 </ol>
 
-<p>Here we see our sample mean.</p>
+<h4>Sample Mean:</h4>
 
-<pre><code class="r">mean(sampleMeans)
+<p>Here we generate the mean for each of the 1000 rows in the data frame
+and then the mean of all the means.</p>
+
+<pre><code class="r">sampleMeans &lt;- apply(samples,FUN = mean, MARGIN=1)
+mean(sampleMeans)
 </code></pre>
 
-<pre><code>## [1] 4.980821
+<pre><code>## [1] 5.00499
 </code></pre>
 
-<p>\(Var(X) = \sigma^2/n \implies \sigma = \sqrt(Var(X) * n)  = \sigma\)</p>
+<h4>Theoretical Mean:</h4>
 
-<p>By solving for</p>
+<p>The theoretical mean is given by:</p>
+
+<p>\(1 / lambda \) =</p>
+
+<pre><code class="r">1/lambda
+</code></pre>
+
+<pre><code>## [1] 5
+</code></pre>
+
+<p>Here we see that the sample mean roughly coincides with the
+theoretical mean, just as the Central Limit Theorum predicts.</p>
+
+<h3>Comparing the Sample Variance to the Theoretical Variance</h3>
 
 <ol>
 <li>Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.</li>
 </ol>
 
-<pre><code class="r">var(sampleMeans)
+<h4>Theoretical Variance</h4>
+
+<p>The theoretical variance of the distribution is \((1 / \lambda)^2\):</p>
+
+<pre><code class="r">(1/lambda)^2
 </code></pre>
 
-<pre><code>## [1] 0.6596787
+<pre><code>## [1] 25
 </code></pre>
 
-<ol>
-<li>Show that the distribution is approximately normal.</li>
-</ol>
+<h4>Sample Variance</h4>
 
-<pre><code class="r">hist(sampleMeans)
+<p>Similar to calculating the sample means above, here we calculated the
+variance for all 1000 samples of the exponential distribution.</p>
+
+<pre><code class="r">sampleVariances &lt;- apply(samples, FUN = var, MARGIN = 1)
+mean(sampleVariances)
 </code></pre>
 
-<p><img src="assets/fig/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"/> </p>
+<pre><code>## [1] 24.82593
+</code></pre>
+
+<p>The theoretical variance is then
+3. Show that the distribution is approximately normal.</p>
+
+<pre><code class="r">g &lt;- ggplot(as.data.frame(sampleMeans), aes(sampleMeans))
+g + geom_histogram(binwidth=0.25)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-7"/> </p>
 
 </body>
 

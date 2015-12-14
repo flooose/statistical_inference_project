@@ -23,53 +23,100 @@ In the investigation, we will address the following questions:
 ## Setup
 
 
-```r
-library(ggplot2)
-```
-$Var(X_i) = 2.92$
-We begin by taking 1000 means of 40 samples of the exponential distribution
+
+We begin by setting some variables and creating a data frame of 1000
+simulations with 40 samples from the exponential distribution.
 
 
 ```r
-sampleMeans = NULL
 lambda = 0.2
-theoreticalMean = 1/lambda
-for (i in 1 : 1000) sampleMeans = c(sampleMeans, mean(rexp(40, rate = 0.2)))
+samples <- NULL
+
+for (i in 1 : 1000) samples = rbind(samples, rexp(40, rate = lambda))
+str(samples)
 ```
+
+```
+##  num [1:1000, 1:40] 9.11 1.86 4.06 1.61 8.77 ...
+```
+
+### Comparing the Sample Mean to the Theoretical Mean
 
 1. Show the sample mean and compare it to the theoretical mean of the distribution.
 
-Here we see our sample mean.
+#### Sample Mean:
+
+Here we generate the mean for each of the 1000 rows in the data frame
+and then the mean of all the means.
+
 
 
 ```r
+sampleMeans <- apply(samples,FUN = mean, MARGIN=1)
 mean(sampleMeans)
 ```
 
 ```
-## [1] 4.980821
+## [1] 5.00499
 ```
 
-\(Var(X) = \sigma^2/n \implies \sigma = \sqrt(Var(X) * n)  = \sigma\)
+#### Theoretical Mean:
 
-By solving for
+The theoretical mean is given by:
 
-2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
+\(1 / lambda \) =
 
 
 ```r
-var(sampleMeans)
+1/lambda
 ```
 
 ```
-## [1] 0.6596787
+## [1] 5
 ```
 
+Here we see that the sample mean roughly coincides with the
+theoretical mean, just as the Central Limit Theorum predicts.
+
+### Comparing the Sample Variance to the Theoretical Variance
+
+2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
+
+#### Theoretical Variance
+
+The theoretical variance of the distribution is \((1 / \lambda)^2\):
+
+
+```r
+(1/lambda)^2
+```
+
+```
+## [1] 25
+```
+
+#### Sample Variance
+
+Similar to calculating the sample means above, here we calculated the
+variance for all 1000 samples of the exponential distribution.
+
+
+```r
+sampleVariances <- apply(samples, FUN = var, MARGIN = 1)
+mean(sampleVariances)
+```
+
+```
+## [1] 24.82593
+```
+
+The theoretical variance is then
 3. Show that the distribution is approximately normal.
 
 
 ```r
-hist(sampleMeans)
+g <- ggplot(as.data.frame(sampleMeans), aes(sampleMeans))
+g + geom_histogram(binwidth=0.25)
 ```
 
-![plot of chunk unnamed-chunk-5](assets/fig/unnamed-chunk-5-1.png) 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
