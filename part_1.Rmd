@@ -98,3 +98,5 @@ The theoretical variance is then
 g <- ggplot(as.data.frame(sampleMeans), aes(sampleMeans))
 g + geom_histogram(binwidth=0.25)
 ```
+
+## Conclusion
