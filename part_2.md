@@ -8,23 +8,12 @@ output:
 
 # Analysis of the ToothGrowth Data Setup
 
-Now in the second portion of the class, we're going to analyze the ToothGrowth data in the R datasets package.
+## Introduction and Setup
 
-- Load the ToothGrowth data and perform some basic exploratory data analyses
-- Provide a basic summary of the data.
-- Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
-- State your conclusions and the assumptions needed for your conclusions.
-
-Some criteria that you will be evaluated on
-
-- Did you  perform an exploratory data analysis of at least a single plot or table highlighting basic features of the data?
-- Did the student perform some relevant confidence intervals and/or tests?
-- Were the results of the tests and/or intervals interpreted in the context of the problem correctly?
-- Did the student describe the assumptions needed for their conclusions?
-
-
----
-## Setup
+The following analysis examines tooth growth data in guinea pigs. It
+examines the effect of two supplements, orange juice (`OJ`) and
+ascorbic acid (`VC`) on tooth growth and does this at 3 dose levels,
+0.5, 1.0 and 2.0 mg/day.
 
 
 
@@ -35,28 +24,53 @@ data(ToothGrowth)
 
 ## Summary of Data
 
-The following was taken directly from the help page (`?ToothGrowth`)
-for the data set.
+We start by taking a look at the original data.
 
 
 ```r
-require(graphics)
-coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth,
-       xlab = "ToothGrowth data: length vs dose, given type of supplement")
+str(ToothGrowth)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+```
+## 'data.frame':	60 obs. of  3 variables:
+##  $ len : num  4.2 11.5 7.3 5.8 6.4 10 11.2 11.2 5.2 7 ...
+##  $ supp: Factor w/ 2 levels "OJ","VC": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ dose: num  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 ...
+```
 
-Here we see that for the smaller dosages, `OJ` seems to perform better
-than `VC`, whereas for the larger dosages they seem to perform about
-equally. This analysis will examine exactly this.
+Here we see that the `dose` variable is not a factor variable. Since
+we'll be categorizing the data based on `dose`, it's better to convert
+this column to a factor column.
 
 
 ```r
-vc <- ToothGrowth[ToothGrowth$supp == "VC", c(1,3)]
-vc$dose <- as.factor(vc$dose)
-oj <- ToothGrowth[ToothGrowth$supp == "OJ", c(1,3)]
-oj$dose <- as.factor(oj$dose)
+tg <- ToothGrowth
+tg$dose <- as.factor(tg$dose)
+```
+
+Summarizing the data, we see in the following chart, that for the
+smaller dosages, `OJ` seems to perform better than `VC`, whereas for
+the largest dosage they seem to perform about equally. The red dots
+are the averages of the black dots for each given dose.
+
+
+```r
+g <- ggplot(tg, aes(dose, len))
+b <- ddply(tg, .(supp, dose), summarize, mean = mean(len))
+g + geom_point() + geom_point(aes(x=dose, y=mean), data = b, color = 'red') + facet_grid(supp ~ .)
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+
+Furthermore we would like to know if `OJ` is in general a better
+supplement than `VC`, so we divide the data into two corresponding
+data sets.
+
+
+```r
+vc <- tg[tg$supp == "VC", c(1,3)]
+oj <- tg[tg$supp == "OJ", c(1,3)]
+
 summary(vc)
 ```
 
@@ -85,27 +99,22 @@ summary(oj)
 ```
 
 We see that the mean `len`th for diets supplemented with `OJ` is
-larger than that of `VC`
+larger than that of `VC`, but does that mean that we can really be
+confident that `OJ` is a better growth supplement than `VC`?
 
 ## Analysis
 
-Based on the information above, we would like to know if `OJ` really
-is the better supplement for toothgrowth in guinea pigs.
+Based on the information above, we would like to know if `OJ` is the
+better growth supplement for guinea pigs, as well as *at what* levels
+`OJ` is a better growth supplement.
+
+We will use _t-intervals_ for our tests.
+
+### Confidence interval of the difference between `OJ` and `VC` **in general**
 
 \( H_0 = \) No, `OJ` does not perform better than `VC` as a supplement
 
 \( H_A = \) Yes, `OJ` does perform better than `VC` as a supplement
-
-Assumptions:
-
-1. The distribution is nearly normal for the guinea pigs.
-2. The observations are independent.
-3. The guinea pigs represent less than 10% of the population.
-4. The samples are independent
-
-We will use _t-intervals_ for our tests.
-
-Confidence interval of the difference between `OJ` and `VC`
 
 
 ```r
@@ -118,7 +127,13 @@ t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE)$conf
 ## [1] 0.95
 ```
 
-Confidence interval of the difference between `OJ` and `VC` at 0.5 mg/day
+### Confidence interval of the difference between `OJ` and `VC` **At different dosage levels**
+
+Confidence interval of the difference between `OJ` and `VC` **at 0.5 mg/day**
+
+\( H_{0_{0.5}} = \) `OJ` performs better than `VC` at a 0.5 dosage
+
+\( H_{A_{0.5}} = \) `OJ` does not perform better than `VC` at a 0.5 dosage
 
 
 ```r
@@ -131,7 +146,11 @@ t.test(oj[oj$dose == 0.5,]$len, vc[vc$dose == 0.5,]$len, paired = FALSE, var.equ
 ## [1] 0.95
 ```
 
-Confidence interval of the difference between `OJ` and `VC` at 1 mg/day
+Confidence interval of the difference between `OJ` and `VC` **at 1 mg/day**
+
+\( H_{0_{1}} = \) `OJ` performs better than `VC` at a 1 dosage
+
+\( H_{A_{1}} = \) `OJ` does not perform better than `VC` at a 1 dosage
 
 
 ```r
@@ -144,7 +163,11 @@ t.test(oj[oj$dose == 1,]$len, vc[vc$dose == 1,]$len, paired = FALSE, var.equal =
 ## [1] 0.95
 ```
 
-Confidence interval of the difference between `OJ` and `VC` at 2 mg/day
+Confidence interval of the difference between `OJ` and `VC` **at 2 mg/day**
+
+\( H_{0_{2}} = \) `OJ` performs better than `VC` at a 2 dosage
+
+\( H_{A_{2}} = \) `OJ` does not perform better than `VC` at a 2 dosage
 
 
 ```r
@@ -158,3 +181,22 @@ t.test(oj[oj$dose == 2,]$len, vc[vc$dose == 2,]$len, paired = FALSE, var.equal =
 ```
 
 ## Conclusion
+
+As the above calculations indicate, `OJ` cannot be **generally**
+considered a better growth supplement than `VC` because the 95%
+confidence interval includes zero growth (although, just barely: -0.17
+7.57).
+
+The confidence intervals for the various dosages indicate that for
+small dosages (0.5 and 1.0) `OJ` is a better growth supplement because
+their 95% confidence intervals are all above 0 (1.77 - 8.73 and 2.84 -
+9.02 for 0.5 mg/day and 1.0 mg/day, respectively), while the dosage of
+2.0 indicates that both supplements are equally adequate.
+
+The conclusions about the data were made under the following
+assumptions about the data:
+
+1. The distribution is nearly normal for the guinea pigs.
+2. The observations are independent.
+3. The guinea pigs represent less than 10% of the population.
+4. The samples are independent
