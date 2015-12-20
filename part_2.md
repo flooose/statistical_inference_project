@@ -26,12 +26,10 @@ Some criteria that you will be evaluated on
 ---
 ## Setup
 
-```{r, include=F}
-library(ggplot2)
 
-```
 
-```{r, cache = T}
+
+```r
 data(ToothGrowth)
 ```
 
@@ -40,23 +38,50 @@ data(ToothGrowth)
 The following was taken directly from the help page (`?ToothGrowth`)
 for the data set.
 
-```{R}
+
+```r
 require(graphics)
 coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth,
        xlab = "ToothGrowth data: length vs dose, given type of supplement")
 ```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
 Here we see that for the smaller dosages, `OJ` seems to perform better
 than `VC`, whereas for the larger dosages they seem to perform about
 equally. This analysis will examine exactly this.
 
-```{r, cache=T}
+
+```r
 vc <- ToothGrowth[ToothGrowth$supp == "VC", c(1,3)]
 vc$dose <- as.factor(vc$dose)
 oj <- ToothGrowth[ToothGrowth$supp == "OJ", c(1,3)]
 oj$dose <- as.factor(oj$dose)
 summary(vc)
+```
+
+```
+##       len         dose   
+##  Min.   : 4.20   0.5:10  
+##  1st Qu.:11.20   1  :10  
+##  Median :16.50   2  :10  
+##  Mean   :16.96           
+##  3rd Qu.:23.10           
+##  Max.   :33.90
+```
+
+```r
 summary(oj)
+```
+
+```
+##       len         dose   
+##  Min.   : 8.20   0.5:10  
+##  1st Qu.:15.53   1  :10  
+##  Median :22.70   2  :10  
+##  Mean   :20.66           
+##  3rd Qu.:25.73           
+##  Max.   :30.90
 ```
 
 We see that the mean `len`th for diets supplemented with `OJ` is
@@ -82,26 +107,54 @@ We will use _t-intervals_ for our tests.
 
 Confidence interval of the difference between `OJ` and `VC`
 
-```{R}
+
+```r
 t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE)$conf
+```
+
+```
+## [1] -0.1670064  7.5670064
+## attr(,"conf.level")
+## [1] 0.95
 ```
 
 Confidence interval of the difference between `OJ` and `VC` at 0.5 mg/day
 
-```{R}
+
+```r
 t.test(oj[oj$dose == 0.5,]$len, vc[vc$dose == 0.5,]$len, paired = FALSE, var.equal = TRUE)$conf
+```
+
+```
+## [1] 1.770262 8.729738
+## attr(,"conf.level")
+## [1] 0.95
 ```
 
 Confidence interval of the difference between `OJ` and `VC` at 1 mg/day
 
-```{R}
+
+```r
 t.test(oj[oj$dose == 1,]$len, vc[vc$dose == 1,]$len, paired = FALSE, var.equal = TRUE)$conf
+```
+
+```
+## [1] 2.840692 9.019308
+## attr(,"conf.level")
+## [1] 0.95
 ```
 
 Confidence interval of the difference between `OJ` and `VC` at 2 mg/day
 
-```{R}
+
+```r
 t.test(oj[oj$dose == 2,]$len, vc[vc$dose == 2,]$len, paired = FALSE, var.equal = TRUE)$conf
+```
+
+```
+## [1] -3.722999  3.562999
+## attr(,"conf.level")
+## [1] 0.95
 ```
 
 ## Conclusion
