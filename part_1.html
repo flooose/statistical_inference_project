@@ -204,8 +204,6 @@ hr {
 </head>
 
 <body>
-<hr/>
-
 <h1>Properties of the Exponential Distribution</h1>
 
 <p>This project compares the exponential distribution to the Central Limit Theorum.</p>
@@ -226,24 +224,22 @@ simulations of 40 samples.</p>
 
 <h2>Setup</h2>
 
-<p>We begin by setting some variables and creating a data frame of 1000
+<p>We begin by setting variables and creating a data frame of 1000
 simulations with 40 samples from the exponential distribution.</p>
 
-<pre><code class="r">lambda = 0.2
+<pre><code class="r">set.seed(1)
+
+lambda = 0.2
 samples &lt;- NULL
 
 for (i in 1 : 1000) samples = rbind(samples, rexp(40, rate = lambda))
 str(samples)
 </code></pre>
 
-<pre><code>##  num [1:1000, 1:40] 9.11 1.86 4.06 1.61 8.77 ...
+<pre><code>##  num [1:1000, 1:40] 3.78 5.4 1.93 1.18 7.48 ...
 </code></pre>
 
 <h2>Comparing the Sample Mean to the Theoretical Mean</h2>
-
-<ol>
-<li>Show the sample mean and compare it to the theoretical mean of the distribution.</li>
-</ol>
 
 <h3>Sample Mean:</h3>
 
@@ -254,7 +250,7 @@ and then the mean of all the means.</p>
 mean(sampleMeans)
 </code></pre>
 
-<pre><code>## [1] 5.00499
+<pre><code>## [1] 4.990025
 </code></pre>
 
 <h3>Theoretical Mean:</h3>
@@ -274,40 +270,46 @@ theoretical mean, just as the Central Limit Theorum predicts.</p>
 
 <h2>Comparing the Sample Variance to the Theoretical Variance</h2>
 
-<ol>
-<li>Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.</li>
-</ol>
-
 <h3>Theoretical Variance</h3>
 
-<p>The theoretical variance of the distribution is \((1 / \lambda)^2\):</p>
+<p>The theoretical variance of the distribution is \((1 / \lambda/sqrt(40))^2\):</p>
 
-<pre><code class="r">(1/lambda)^2
+<pre><code class="r">((1/lambda)^2/40)
 </code></pre>
 
-<pre><code>## [1] 25
+<pre><code>## [1] 0.625
 </code></pre>
 
 <h3>Sample Variance</h3>
 
-<p>Similar to calculating the sample means above, here we calculated the
-variance for all 1000 samples of the exponential distribution.</p>
+<p>Calculating the variance of the sample means:</p>
 
-<pre><code class="r">sampleVariances &lt;- apply(samples, FUN = var, MARGIN = 1)
-mean(sampleVariances)
+<pre><code class="r">var(sampleMeans)
 </code></pre>
 
-<pre><code>## [1] 24.82593
+<pre><code>## [1] 0.6111165
 </code></pre>
 
-<p>The theoretical variance is then
-3. Show that the distribution is approximately normal.</p>
+<p>Here we see that the theoretical sample mean and the actual sample
+mean are also close.</p>
 
-<pre><code class="r">g &lt;- ggplot(as.data.frame(sampleMeans), aes(sampleMeans))
-g + geom_histogram(binwidth=0.25)
+<h2>Distribution of the Sample</h2>
+
+<pre><code class="r">g &lt;- ggplot(as.data.frame(sampleMeans), aes(x = sampleMeans))
+g + geom_histogram(binwidth=0.25, aes(y=..density..)) + stat_function(fun = dnorm)
 </code></pre>
 
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-7"/> </p>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-7"/> </p>
+
+<p>Here we see that the distribution is approximately normal about the
+mean, 5.</p>
+
+<h2>Conclusion</h2>
+
+<p>Based on the work above, we see that the sample mean approximates the
+theoretical mean, the variance of the sample mean approximates the
+theoretical variance of the sampling distribution and that the sample
+mean is approximately normally distributed.</p>
 
 </body>
 

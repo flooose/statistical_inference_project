@@ -1,10 +1,10 @@
 ---
 title: "Properties of the Exponential Distribution"
 output:
+  pdf_document: default
   html_document:
-    keep_md: true
+    keep_md: yes
     mathjax: default
----
 ---
 
 # Properties of the Exponential Distribution
@@ -21,14 +21,13 @@ In the investigation, we will address the following questions:
 2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
 3. Show that the distribution is approximately normal.
 
----
 ## Setup
 
 ```{r, include=F}
 library(ggplot2)
 ```
 
-We begin by setting some variables and creating a data frame of 1000
+We begin by setting variables and creating a data frame of 1000
 simulations with 40 samples from the exponential distribution.
 
 ```{r, cache = T}
@@ -43,15 +42,13 @@ str(samples)
 
 ## Comparing the Sample Mean to the Theoretical Mean
 
-1. Show the sample mean and compare it to the theoretical mean of the distribution.
-
 ### Sample Mean:
 
 Here we generate the mean for each of the 1000 rows in the data frame
 and then the mean of all the means.
 
 
-```{r, echo=T}
+```{r, echo=T, cache = T}
 sampleMeans <- apply(samples,FUN = mean, MARGIN=1)
 mean(sampleMeans)
 ```
@@ -60,7 +57,7 @@ mean(sampleMeans)
 
 The theoretical mean is given by:
 
-\(1 / lambda \) =
+$1 / lambda$ =
 
 ```{r, echo=T}
 1/lambda
@@ -71,32 +68,38 @@ theoretical mean, just as the Central Limit Theorum predicts.
 
 ## Comparing the Sample Variance to the Theoretical Variance
 
-2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
-
 ### Theoretical Variance
 
-The theoretical variance of the distribution is \((1 / \lambda)^2\):
+The theoretical variance of the distribution is $\frac{(1 / \lambda)^2}{40}$:
 
 ```{r}
-(1/lambda)^2
+((1/lambda)^2/40)
 ```
 
 ### Sample Variance
 
-Similar to calculating the sample means above, here we calculated the
-variance for all 1000 samples of the exponential distribution.
+Calculating the variance of the sample means:
 
 ```{r}
-sampleVariances <- apply(samples, FUN = var, MARGIN = 1)
-mean(sampleVariances)
+var(sampleMeans)
 ```
 
-The theoretical variance is then
-3. Show that the distribution is approximately normal.
+Here we see that the theoretical sample mean and the actual sample
+mean are also close.
+
+## Distribution of the Sample
 
 ```{r}
-g <- ggplot(as.data.frame(sampleMeans), aes(sampleMeans))
-g + geom_histogram(binwidth=0.25)
+g <- ggplot(as.data.frame(sampleMeans), aes(x = sampleMeans))
+g + geom_histogram(binwidth=0.25, aes(y=..density..)) + stat_function(fun = dnorm)
 ```
+
+Here we see that the distribution is approximately normal about the
+mean, 5.
 
 ## Conclusion
+
+Based on the work above, we see that the sample mean approximates the
+theoretical mean, the variance of the sample mean approximates the
+theoretical variance of the sampling distribution and that the sample
+mean is approximately normally distributed.
