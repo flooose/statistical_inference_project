@@ -1,5 +1,6 @@
 ---
-title: "Properties of the Exponential Distribution"
+title: "Exploring the Exponential Distribution"
+author: Christopher Floess
 output:
   pdf_document: default
   html_document:
@@ -7,7 +8,7 @@ output:
     mathjax: default
 ---
 
-# Properties of the Exponential Distribution
+# Introduction
 
 This project compares the exponential distribution to the Central Limit Theorum.
 
@@ -28,7 +29,7 @@ library(ggplot2)
 ```
 
 We begin by setting variables and creating a data frame of 1000
-simulations with 40 samples from the exponential distribution.
+simulations with 40 samples from the exponential distribution, `rexp`.
 
 ```{r, cache = T}
 set.seed(1)
@@ -63,7 +64,7 @@ $1 / lambda$ =
 1/lambda
 ```
 
-Here we see that the sample mean roughly coincides with the
+Here we see that the sample mean is roughly centered at the
 theoretical mean, just as the Central Limit Theorum predicts.
 
 ## Comparing the Sample Variance to the Theoretical Variance
@@ -73,7 +74,7 @@ theoretical mean, just as the Central Limit Theorum predicts.
 The theoretical variance of the distribution is $\frac{(1 / \lambda)^2}{40}$:
 
 ```{r}
-((1/lambda)^2/40)
+(1/lambda)^2/40
 ```
 
 ### Sample Variance
@@ -91,7 +92,10 @@ mean are also close.
 
 ```{r}
 g <- ggplot(as.data.frame(sampleMeans), aes(x = sampleMeans))
-g + geom_histogram(binwidth=0.25, aes(y=..density..)) + stat_function(fun = dnorm)
+g + geom_histogram(binwidth=0.25, aes(y=..density..), position = "stack") +
+    stat_function(fun = dnorm, color = 'purple',
+                  args = list(mean = mean(sampleMeans), sd = sd(sampleMeans))) +
+    xlab(expression(means)) + ylab('') + scale_x_continuous(breaks = seq(2.5, 8, by = 0.5))
 ```
 
 Here we see that the distribution is approximately normal about the

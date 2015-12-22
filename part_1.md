@@ -1,12 +1,15 @@
 ---
-title: "Properties of the Exponential Distribution"
+title: "Exploring the Exponential Distribution"
+author: Christopher Floess
 output:
+  pdf_document: default
   html_document:
-    keep_md: true
+    highlight: zenburn
+    keep_md: yes
     mathjax: default
 ---
 
-# Properties of the Exponential Distribution
+# Introduction
 
 This project compares the exponential distribution to the Central Limit Theorum.
 
@@ -20,13 +23,12 @@ In the investigation, we will address the following questions:
 2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
 3. Show that the distribution is approximately normal.
 
----
 ## Setup
 
 
 
 We begin by setting variables and creating a data frame of 1000
-simulations with 40 samples from the exponential distribution.
+simulations with 40 samples from the exponential distribution, `rexp`.
 
 
 ```r
@@ -65,7 +67,7 @@ mean(sampleMeans)
 
 The theoretical mean is given by:
 
-\(1 / lambda \) =
+$1 / lambda$ =
 
 
 ```r
@@ -76,18 +78,18 @@ The theoretical mean is given by:
 ## [1] 5
 ```
 
-Here we see that the sample mean roughly coincides with the
+Here we see that the sample mean is roughly centered at the
 theoretical mean, just as the Central Limit Theorum predicts.
 
 ## Comparing the Sample Variance to the Theoretical Variance
 
 ### Theoretical Variance
 
-The theoretical variance of the distribution is \((1 / \lambda/sqrt(40))^2\):
+The theoretical variance of the distribution is $\frac{(1 / \lambda)^2}{40}$:
 
 
 ```r
-((1/lambda)^2/40)
+(1/lambda)^2/40
 ```
 
 ```
@@ -115,7 +117,9 @@ mean are also close.
 
 ```r
 g <- ggplot(as.data.frame(sampleMeans), aes(x = sampleMeans))
-g + geom_histogram(binwidth=0.25, aes(y=..density..)) + stat_function(fun = dnorm)
+g + geom_histogram(binwidth=0.25, aes(y=..density..), position = "stack") +
+    stat_function(fun = dnorm, color = 'purple',
+                  args = list(mean = mean(sampleMeans), sd = sd(sampleMeans)))
 ```
 
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
