@@ -1,10 +1,4 @@
----
-title: "Tooth Growth"
-output:
-  html_document:
-    keep_md: true
-    mathjax: default
----
+# Tooth Growth
 
 # Analysis of the ToothGrowth Data Setup
 
@@ -60,7 +54,7 @@ b <- ddply(tg, .(supp, dose), summarize, mean = mean(len))
 g + geom_point() + geom_point(aes(x=dose, y=mean), data = b, color = 'red') + facet_grid(supp ~ .)
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+![](part_2_files/figure-html/unnamed-chunk-5-1.png) 
 
 Furthermore we would like to know if `OJ` is in general a better
 supplement than `VC`, so we divide the data into two corresponding
@@ -112,9 +106,9 @@ We will use _t-intervals_ for our tests.
 
 ### Confidence interval of the difference between `OJ` and `VC` **in general**
 
-\( H_0 = \) No, `OJ` does not perform better than `VC` as a supplement
+$H_0 =$ No, `OJ` does not perform better than `VC` as a supplement
 
-\( H_A = \) Yes, `OJ` does perform better than `VC` as a supplement
+$H_A =$ Yes, `OJ` does perform better than `VC` as a supplement
 
 
 ```r
@@ -131,9 +125,9 @@ t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE)$conf
 
 Confidence interval of the difference between `OJ` and `VC` **at 0.5 mg/day**
 
-\( H_{0_{0.5}} = \) `OJ` performs better than `VC` at a 0.5 dosage
+$H_{0_{0.5}} =$ `OJ` performs better than `VC` at a 0.5 dosage
 
-\( H_{A_{0.5}} = \) `OJ` does not perform better than `VC` at a 0.5 dosage
+$H_{A_{0.5}} =$ `OJ` does not perform better than `VC` at a 0.5 dosage
 
 
 ```r
@@ -148,9 +142,9 @@ t.test(oj[oj$dose == 0.5,]$len, vc[vc$dose == 0.5,]$len, paired = FALSE, var.equ
 
 Confidence interval of the difference between `OJ` and `VC` **at 1 mg/day**
 
-\( H_{0_{1}} = \) `OJ` performs better than `VC` at a 1 dosage
+$H_{0_{1}} =$ `OJ` performs better than `VC` at a 1 dosage
 
-\( H_{A_{1}} = \) `OJ` does not perform better than `VC` at a 1 dosage
+$H_{A_{1}} =$ `OJ` does not perform better than `VC` at a 1 dosage
 
 
 ```r
@@ -165,9 +159,9 @@ t.test(oj[oj$dose == 1,]$len, vc[vc$dose == 1,]$len, paired = FALSE, var.equal =
 
 Confidence interval of the difference between `OJ` and `VC` **at 2 mg/day**
 
-\( H_{0_{2}} = \) `OJ` performs better than `VC` at a 2 dosage
+$H_{0_{2}} =$ `OJ` performs better than `VC` at a 2 dosage
 
-\( H_{A_{2}} = \) `OJ` does not perform better than `VC` at a 2 dosage
+$H_{A_{2}} =$ `OJ` does not perform better than `VC` at a 2 dosage
 
 
 ```r
