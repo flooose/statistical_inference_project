@@ -1,4 +1,5 @@
 # Tooth Growth
+Christopher Floess  
 
 # Analysis of the ToothGrowth Data Setup
 
@@ -14,6 +15,7 @@ ascorbic acid (`VC`) on tooth growth and does this at 3 dose levels,
 
 ```r
 data(ToothGrowth)
+tg <- ToothGrowth
 ```
 
 ## Summary of Data
@@ -32,33 +34,8 @@ str(ToothGrowth)
 ##  $ dose: num  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 ...
 ```
 
-Here we see that the `dose` variable is not a factor variable. Since
-we'll be categorizing the data based on `dose`, it's better to convert
-this column to a factor column.
-
-
-```r
-tg <- ToothGrowth
-tg$dose <- as.factor(tg$dose)
-```
-
-Summarizing the data, we see in the following chart, that for the
-smaller dosages, `OJ` seems to perform better than `VC`, whereas for
-the largest dosage they seem to perform about equally. The red dots
-are the averages of the black dots for each given dose.
-
-
-```r
-g <- ggplot(tg, aes(dose, len))
-b <- ddply(tg, .(supp, dose), summarize, mean = mean(len))
-g + geom_point() + geom_point(aes(x=dose, y=mean), data = b, color = 'red') + facet_grid(supp ~ .)
-```
-
-![](part_2_files/figure-html/unnamed-chunk-5-1.png) 
-
-Furthermore we would like to know if `OJ` is in general a better
-supplement than `VC`, so we divide the data into two corresponding
-data sets.
+We would like to know if `OJ` is in general a better supplement than
+`VC`, so we divide the data into two corresponding data sets.
 
 
 ```r
@@ -69,13 +46,13 @@ summary(vc)
 ```
 
 ```
-##       len         dose   
-##  Min.   : 4.20   0.5:10  
-##  1st Qu.:11.20   1  :10  
-##  Median :16.50   2  :10  
-##  Mean   :16.96           
-##  3rd Qu.:23.10           
-##  Max.   :33.90
+##       len             dose      
+##  Min.   : 4.20   Min.   :0.500  
+##  1st Qu.:11.20   1st Qu.:0.500  
+##  Median :16.50   Median :1.000  
+##  Mean   :16.96   Mean   :1.167  
+##  3rd Qu.:23.10   3rd Qu.:2.000  
+##  Max.   :33.90   Max.   :2.000
 ```
 
 ```r
@@ -83,18 +60,32 @@ summary(oj)
 ```
 
 ```
-##       len         dose   
-##  Min.   : 8.20   0.5:10  
-##  1st Qu.:15.53   1  :10  
-##  Median :22.70   2  :10  
-##  Mean   :20.66           
-##  3rd Qu.:25.73           
-##  Max.   :30.90
+##       len             dose      
+##  Min.   : 8.20   Min.   :0.500  
+##  1st Qu.:15.53   1st Qu.:0.500  
+##  Median :22.70   Median :1.000  
+##  Mean   :20.66   Mean   :1.167  
+##  3rd Qu.:25.73   3rd Qu.:2.000  
+##  Max.   :30.90   Max.   :2.000
 ```
 
 We see that the mean `len`th for diets supplemented with `OJ` is
 larger than that of `VC`, but does that mean that we can really be
 confident that `OJ` is a better growth supplement than `VC`?
+
+Furthermore, we see in the following chart, that for the smaller
+dosages, `OJ` seems to perform better than `VC`, whereas for the
+largest dosage they seem to perform about equally. The red dots are
+the averages of the black dots for each given dose.
+
+
+```r
+g <- ggplot(tg, aes(dose, len))
+b <- ddply(tg, .(supp, dose), summarize, mean = mean(len))
+g + geom_point() + geom_point(aes(x=dose, y=mean), data = b, color = 'red') + facet_grid(supp ~ .) + xlab("dose (mg/day)") + ylab("length (units not given)")
+```
+
+![](part_2_files/figure-html/unnamed-chunk-5-1.png) 
 
 ## Analysis
 
@@ -183,14 +174,16 @@ confidence interval includes zero growth (although, just barely: -0.17
 
 The confidence intervals for the various dosages indicate that for
 small dosages (0.5 and 1.0) `OJ` is a better growth supplement because
-their 95% confidence intervals are all above 0 (1.77 - 8.73 and 2.84 -
+their 95% confidence intervals are entirely above 0 (1.77 - 8.73 and 2.84 -
 9.02 for 0.5 mg/day and 1.0 mg/day, respectively), while the dosage of
 2.0 indicates that both supplements are equally adequate.
 
 The conclusions about the data were made under the following
-assumptions about the data:
+assumptions about the data
+[@openintro, Chapter 5, section 5.1.3 "Conditions for using the t-distribution for inference on a sample mean"]
 
 1. The distribution is nearly normal for the guinea pigs.
 2. The observations are independent.
 3. The guinea pigs represent less than 10% of the population.
-4. The samples are independent
+
+## References

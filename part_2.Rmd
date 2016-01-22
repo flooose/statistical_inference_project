@@ -6,6 +6,21 @@ output:
     keep_md: yes
     mathjax: default
   pdf_document: default
+references:
+- id: openintro
+  title: OpenIntro Statistics
+  author:
+  - family: Diez
+    given: David M
+  - family: Barr
+    given: Christopher D
+  - family: Çetinkaya-Rundel
+    given: Mine
+  URL: 'https://www.openintro.org/'
+  issued:
+    year: 2015
+    month: 9
+
 ---
 
 # Analysis of the ToothGrowth Data Setup
@@ -125,9 +140,11 @@ their 95% confidence intervals are entirely above 0 (1.77 - 8.73 and 2.84 -
 2.0 indicates that both supplements are equally adequate.
 
 The conclusions about the data were made under the following
-assumptions about the data:
+assumptions about the data
+[@openintro, Chapter 5, section 5.1.3 "Conditions for using the t-distribution for inference on a sample mean"]
 
 1. The distribution is nearly normal for the guinea pigs.
 2. The observations are independent.
 3. The guinea pigs represent less than 10% of the population.
-4. The samples are independent
+
+## References
